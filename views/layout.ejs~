@@ -16,22 +16,20 @@
 </head> 
 
 <body>
-  <div id="page">
-    <header class="main">
-	<h2>Quiz<span class="no-narrow">: el juego de las preguntas</span>
-	</h2>
+    <header>
+	<h2>Quiz: el juego de las preguntas</h2>
     </header>
 
-    <nav class="main" role="navigation">
+    <nav>
         <a href="/">Inicio</a>
         <a href="/question">Preguntas</a>
     </nav>
       
-    <section class="main">
+    <section>
         <div><%- body %></div>
     </section>
 
-    <footer class="main">
+    <footer>
       <a href="http://es.wikipedia.org/wiki/Quiz">
         ¿Que es un Quiz?</a>
     </footer>
