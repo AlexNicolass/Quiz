@@ -27,6 +27,23 @@ exports.index = function(req, res, next) {
 	}
 };
 
+// GET /quizzes/new
+exports.new = function(req, res, next) {
+	var quiz = models.Quiz.build({question: "", answer: ""});
+	res.render('quizzes/new', {quiz: quiz});
+};
+
+// POST /quizzes/create
+exports.create = function(req, res, next) {
+	var quiz = models.Quiz.build({question: req.body.quiz.question, 
+				      answer:   req.body.quiz.answer});
+	// guarda en DB los campos pregunta y respuesta quiz
+	quiz.save({fields: ["question", "answer"]}).then(function(quiz) {
+		res.redirect('/quizzes');// res.redirect:
+	})				 // Redirección HTTP a la lista de preguntas
+	.catch(function(error) { next(error); });
+};
+
 // GET /quizzes/:id
 exports.show = function(req, res, next) {
 	var answer = req.query.answer || '';
