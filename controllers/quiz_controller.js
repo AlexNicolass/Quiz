@@ -22,7 +22,7 @@ exports.index = function(req, res, next) {
 		}).catch(function(error) { next(error); });
 	} else {
 		var buscar = req.query.search.replace(/\s/g,"%");
-		models.Quiz.findAll({where: ["question like ?", "%"+buscar+"%"]}).then(function(quizzes){
+		models.Quiz.findAll({where: ["question like ?", "%"+buscar+"%"], order: 'question ASC'}).then(function(quizzes){
 		res.render('quizzes/index.ejs', {quizzes: quizzes});
 		}).catch(function(error) { next(error); });
 	}
@@ -80,6 +80,18 @@ exports.update = function(req, res, next) {
 	})
 	.catch(function(error) { 
 		req.flash('error', 'Error al editar el Quiz: '+error.message);
+		next(error);
+	});
+};
+
+// DELETE /quizzes/:id
+exports.destroy = function(req, res, next) {
+	req.quiz.destroy().then(function() {
+		req.flash('success', 'Quiz borrado con éxito.');
+		res.redirect('/quizzes');
+	})
+	.catch(function(error) { 
+		req.flash('error', 'Error al eliminar el Quiz: '+error.message);
 		next(error);
 	});
 };
