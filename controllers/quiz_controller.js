@@ -39,9 +39,13 @@ exports.create = function(req, res, next) {
 				      answer:   req.body.quiz.answer});
 	// guarda en DB los campos pregunta y respuesta quiz
 	quiz.save({fields: ["question", "answer"]}).then(function(quiz) {
+		req.flash('success', 'Quiz creado con éxito.');
 		res.redirect('/quizzes');// res.redirect:
 	})				 // Redirección HTTP a la lista de preguntas
-	.catch(function(error) { next(error); });
+	.catch(function(error) { 
+		req.flash('error', 'Error al crear un Quiz: '+error.message);
+		next(error);
+	});
 };
 
 // GET /quizzes/:id
