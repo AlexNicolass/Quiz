@@ -40,6 +40,24 @@ app.use(function(req, res, next) {
    next();
 });
 
+app.use(function(req, res, next) {
+    var user = req.session.user;
+    var timer = new Date();
+    if (!user) { // Si el usuario no está logueado
+	next();
+    }
+    else {	 // Si el usuario está logueado
+	if ((timer.getTime() - user.timeout) >= 120000) {
+	    delete req.session.user;
+	    next();
+	}
+	else {
+	    user.timeout = new Date().getTime();
+	    next();
+	}
+    }
+});
+
 app.use('/', routes);
 
 // catch 404 and forward to error handler
