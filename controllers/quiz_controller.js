@@ -2,9 +2,10 @@ var models = require('../models');
 var Sequelize = require('sequelize');
 var cloudinary = require('cloudinary');
 var fs = require('fs');
+var Promise = require('promise');
 
 // Opciones para imagenes subidas a Cloudinary
-var cloudinary_image_options = { crop: 'limit', width: 200, height: 200, radius: 5, border: "epx_solid_blue", tags: ['core', 'quiz-2016'] };
+var cloudinary_image_options = { crop: 'limit', width: 200, height: 200, radius: 5, border: "3px_solid_blue", tags: ['core', 'quiz-2016'] };
 
 // Autoload el quiz asociado a :quizId
 exports.load = function(req, res, next, quizId) {
@@ -80,8 +81,7 @@ exports.create = function(req, res, next) {
         }    
 
         // Salvar la imagen en Cloudinary
-        return uploadResourceToCloudinary(req)
-        .then(function(uploadResult) {
+        return uploadResourceToCloudinary(req).then(function(uploadResult) {
             // Crear nuevo attachment en la BBDD.
             return createAttachment(req, uploadResult, quiz);
         });
@@ -131,8 +131,7 @@ exports.update = function(req, res, next) {
         }  
 
         // Salvar la imagen nueva en Cloudinary
-        return uploadResourceToCloudinary(req)
-        .then(function(uploadResult) {
+        return uploadResourceToCloudinary(req).then(function(uploadResult) {
             // Actualizar el attachment en la BBDD.
             return updateAttachment(req, uploadResult, quiz);
         });
@@ -163,8 +162,7 @@ exports.destroy = function(req, res, next) {
         cloudinary.api.delete_resources(req.quiz.Attachment.public_id);
     }
 
-    req.quiz.destroy()
-      .then( function() {
+    req.quiz.destroy().then( function() {
   	  req.flash('success', 'Quiz borrado con éxito.');
           res.redirect('/quizzes');
       })
